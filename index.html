@@ -30,7 +30,65 @@
 		<link rel="stylesheet/less" href="assets/less/flaterial.mobile.min.less">
 	</head>
 	<body>
+		<header id="header">			
+		</header>
 		
+		<div id="main">
+			<aside id="menu">
+				<a class="brand"><label>Flaterial elements</label></a>
+				<img src="assets/imgs/flaterial_50.png" id="logo">
+				<ul class="plugins-container">
+					<li class="item"><a fhref="0"><span>Popups</span></a></li>
+					<li class="item"><a fhref="1"><span>Date time picker</span></a></li>
+					<li class="item"><a fhref="2"><span>Buttons (ToDo)</span></a></li>
+				</ul>
+			</aside>
+
+			<article id="content">
+				<section fid="0">
+					<header>Popups plugin</header>
+					<div class="content">
+						<ul>
+							<li>
+								<label>
+									<span class="code">hasBackdrop: true</span>
+									Add an overlay layer. Its make other elements not clickable instead of the popup itself.
+								</label>
+								<a href="javascript:void(0);" class="button" id="show_1">show with backdrop</a>
+							</li>
+							<li>
+								<label>
+									<span class="code">queue: true</span>
+									Next popups elements will show up bellow previous.
+								</label>
+								<a href="javascript:void(0);" class="button" id="show_2">show queued popups</a>
+							</li>
+							<li>
+								<label>
+									<span class="code">autoCloseDelay: 2000</span>
+									Wait 2000ms before close a popup
+								</label>
+								<a href="javascript:void(0);" class="button" id="show_3">show and close after 2000ms</a>
+							</li>
+							<li>
+								<label>
+									<span class="code">closeOnClick: true</span>
+									Close when user clicks on it
+								</label>
+								<a href="javascript:void(0);" class="button" id="show_4">show and close when user clicks</a>
+							</li>
+							<li>
+								<label>
+									<span class="code">waitingForUser: true, waitingForUserOpts: {...}</span>
+									Wait for user to run correspondant code and close
+								</label>
+								<a href="javascript:void(0);" class="button" id="show_5">deal with the user acceptance</a>
+							</li>
+						</ul>
+					</div>
+				</section>
+			</article>
+		</div>
 	</body>
 
 	<!-- JAVASCTIPT -->
@@ -38,4 +96,7 @@
 	<script type="text/javascript" src="assets/libs/jQuery/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="assets/libs/bootstrap/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="assets/libs/bootstrap/js/ripples.min.js"></script>
+	<script type="text/javascript" src="assets/libs/jStorage/jstorage.min.js"></script>
+	
+	<script type="text/javascript" src="assets/js/app.jq.js"></script>
 </html>

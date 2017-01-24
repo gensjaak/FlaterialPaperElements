@@ -2,3 +2,221 @@
 @import "_variables";
 @import "_fonts";
 @import "../libs/bootstrap/less/_colors";
+
+html, body {
+	background-color: @bodybackgroundcolor;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+}
+
+a {
+	&,
+	&:hover,
+	&:active,
+	&:focus {
+		text-decoration: none;
+	}
+}
+
+header#header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 220px;
+	background-color: @f_green;
+	overflow: hidden;
+}
+
+div#main {
+	position: absolute;
+	background-color: transparent;
+	margin: 0;
+	overflow: auto;
+	overflow-x: hidden;
+	overflow-y: auto;
+	max-width: 102%;
+	width: 102%;
+	height: 100%;
+	padding: 20px 50px;
+
+	& > article,
+	& > aside {
+		display: inline-block;
+		float: left;
+		height: initial;
+		max-height: unset;
+		margin: 0;
+		padding: 0;
+		background-color: @white;
+		overflow: auto;
+		border-radius: 2px;
+		box-shadow: 0 1px 3px 0 rgba(0,0,0,.12);
+	}
+
+	aside#menu {
+		height: 94%;
+		overflow: auto;
+		width: 25%;
+		margin: 0 5% 0 0;
+	}
+
+	article#content {
+		width: 70%;
+		margin: 0;
+		float: right;
+	}
+}
+
+aside#menu {
+	position: fixed;
+
+	a.brand {
+		display: flex;
+		padding: 15px;
+
+		& label {
+			display: block;
+			width: 100%;
+			align-self: center;
+			font-size: 160%;
+			font-family: Light;
+			color: @f_foncedblue;
+			line-height: 1;
+			padding: 0;
+			margin: 0;
+			position: relative;
+
+			&::after {
+				content: 'Inspired from Flaterial concept by Zooper';
+				position: absolute;
+				bottom: -20px;
+				left: 0;
+				width: 100%;
+				color: @f_foncedblue;
+				font-size: 50%;
+				letter-spacing: 1px;
+				line-height: 1.5;
+				opacity: .7;
+			}
+		}
+	}
+
+	img#logo {
+		position: absolute;
+		bottom: 20px;
+		left: 42%;
+	}
+
+	ul.plugins-container {
+		width: 100%;
+		height: initial;
+		padding: 50px 0 0 0;
+		margin: 0;
+		list-style-type: none;
+
+		li.item {
+			width: 100%;
+			height: 50px;
+			display: flex;
+			justify-content: flex-start;
+			background-color: transparent;
+
+			&:hover {
+				background-color: rgba(0,0,0,.12);
+				cursor: pointer;
+			}
+
+			&.active {
+				background-color: rgba(0,0,0,.2);
+			}
+
+			a {
+				&,
+				&:hover,
+				&:active,
+				&:focus {
+					padding: 5px 15px;
+					display: flex;
+					width: 100%;
+					height: 100%;
+					line-height: 1;
+					color: rgba(0,0,0,.5);
+					font-size: 110%;
+					letter-spacing: -.5px;
+					font-family: Bold;
+					outline: none;
+				}
+
+				span {
+					align-self: center;
+				}
+			}
+		}
+	}
+}
+
+article#content {
+	section[fid-bind="popups"] {
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		height: initial;
+
+		header {
+			font-size: 110%;
+			font-family: Bold;
+			color: @f_black;
+			padding: 15px;
+			margin: 0;
+		}
+
+		div.content {
+			padding: 15px;
+			margin: 0;
+
+			ul {
+				list-style-type: none;
+				padding: 0;
+				margin: 0;
+
+				li {
+					display: block;
+					width: 100%;
+					padding: 5px 0;
+					margin: 0 0 30px 0;
+
+					label {
+						display: block;
+						width: 100%;
+						font-family: Light;
+						opacity: .8;
+
+						span.code {
+							font-family: Consolas;
+							display: block;
+							width: initial;
+							padding: 5px 10px;
+							margin: 0;
+							background-color: rgba(0,0,0,.05);
+							border-radius: 1px;
+						}
+					}
+
+					a.button {
+						display: inline-flex;
+						height: 40px;
+						width: initial;
+						padding: 8px 10px;
+						border-radius: 1px;
+						text-transform: uppercase;
+						font-family: Bold;
+						background: lighten(@green, 47%);
+						color: @green;
+					}
+				}
+			}
+		}
+	}
+}

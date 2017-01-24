@@ -1,116 +1,66 @@
 "use strict";
 
 (function ($) {
-	$(document).ready(function (e) {
-		// Bloquer la selection et la colle dans le champ de mot de passe
-		$('input[type=password]').bind('paste', function(e) {
-			e.preventDefault();
-		});
-		$('input[type=password]').bind('selectstart', function() {
-			return false;
-		});
+	var fset = {
+		cri: 0
+	};
 
-		// Fix some sections when scrolling (gg's page)
-		if ($(this).scrollTop() >= 488 && window.outerWidth >= 990) {
-			$(".scroll-and-fix").addClass('scroll-and-fix-active');
-		} else {
-			$(".scroll-and-fix").removeClass('scroll-and-fix-active');
-		}
-		$(this).on('scroll', function (e) {
-			// Side infos on profile page
-			if ($(this).scrollTop() >= 488 && window.outerWidth >= 990) {
-				if ($(".scroll-and-fix")) $(".scroll-and-fix").addClass('scroll-and-fix-active');
-			} else {
-				if ($(".scroll-and-fix")) $(".scroll-and-fix").removeClass('scroll-and-fix-active');
-			}
+	var loadSettings = function () {
+		return (JSON.parse($.jStorage.get("fset", null)) || {});
+	};
 
-			// Fix expandable-56 on scroll
-			if ($(this).scrollTop() >= 60) {
-				if ($('#targetToExpand')) $('#targetToExpand').addClass('fixed-top');
-			} else {
-				if ($('#targetToExpand')) $('#targetToExpand').removeClass('fixed-top');
-			}
-		});
+	var saveSettings = function () {
+		$.jStorage.set("fset", JSON.stringify(fset));
+	};
 
-		// Mapping some DOMElements
-		setTimeout(function () {
-			$('img.mapped').on('load', function (e) {
-				$('input.hidden[name=' + $(this).attr('id') + ']').attr('value', $(this).attr('src').toString());
-			});
-		}, 1000);
+	var __routes = ["popups", "datetimepicker", "buttons"];
+	var __cri = loadSettings().cri;
 
-		var urlB64ToUint8Array = function (base64String) {
-			var padding = '='.repeat((4 - base64String.length % 4) % 4);
-			var base64 = (base64String + padding)
-		    .replace(/\-/g, '+')
-		    .replace(/_/g, '/');
+	var route = function (route) {
+		if (route && window.location.hash !== ("#" + route)) {
+			window.location.hash = "#" + route;
 
-		  var rawData = window.atob(base64);
-		  var outputArray = new Uint8Array(rawData.length);
+			fset.cri = __routes.indexOf(route);
+			saveSettings();
+		} else if (!route) return window.location.hash.replace("#", "");
 
-		  for (var i = 0; i < rawData.length; ++i) {
-		    outputArray[i] = rawData.charCodeAt(i);
-		  }
-		  return outputArray;
-		};
+		updateUI();
+	};
 
-		var updateSubscriptionOnServer = function (subscription) {
-			
-		};
+	var isOriginalEvent = function (e) {
+		return (e && e.hasOwnProperty("originalEvent") && e.originalEvent.isTrusted);
+	};
 
-		if ("serviceWorker" in navigator && 'PushManager' in window) {
-			navigator.serviceWorker.register('/gs-sw.js').then(function (swReg) {
-				swReg.pushManager.getSubscription().then(function(subscription) {
-					var isSubscribed = !(subscription === null);
-					if (isSubscribed) {
-						updateSubscriptionOnServer(JSON.stringify(subscription));
-					} else {
-						var applicationServerPublicKey = 'BArhFsNMYgef1uXGeDs0xy9SwaP2zqr3GV7h8_W-1Ea2AMB0u4KCCitvEUANVHQK0b3WfIkr5muwn6nT1soB8N8';
-						var applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
-						swReg.pushManager.subscribe({
-							userVisibleOnly: true,
-							applicationServerKey: applicationServerKey
-						}).then(function(subscription) {
-							updateSubscriptionOnServer(JSON.stringify(subscription));
-							isSubscribed = true;
-						}).catch(function(err) {
-							console.log('Failed to subscribe the user: ', err);
-						});
+	var resolveEvents = function ($elt) {
+		if ('length' in $elt)
+			$elt.each(function (i, el, $el = $(el)) {
+				$el.off('click'), $el.on('click', function (e) {
+					if (isOriginalEvent(e)) {
+						try {
+							route(__routes[$el.attr("fhref")]);
+						} catch(e) {
+							route(__routes[0]);
+						}
 					}
 				});
-				
-				if ('showNotification' in ServiceWorkerRegistration.prototype) {
-					Notification.requestPermission().then(function (permission) {
-						if (permission === 'denied' || permission === 'default') {
-							console.warn('Notifications::permissions  non accordée !');
-						} else initializePushNotificationService();
-					});
-				} else console.warn('Les notifications Push ne sont pas supportées !');
 			});
-		} else console.warn("Votre navigateur ne supporte pas ServiceWorker. Veuillez mettre à jour votre navigateur !");
+	};
 
-		function initializePushNotificationService() {
-			if (Notification.permission === 'denied') {
-				console.warn('The user has blocked notifications.');
-				return;
-			}
+	var updateUI = function () {
+		var index = __routes.indexOf(route());
 
-			if (!('PushManager' in window)) {
-				console.warn('Push messaging isn\'t supported.');
-				return;
-			}
+		$('li.item').removeClass('active');
+		$('a[fhref=' + index + ']').parent("li.item").addClass('active');
 
-			navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-				serviceWorkerRegistration.pushManager.getSubscription().then(function(subscription) {
-						if (!subscription) {
-							return;
-						}
-					})
-					.catch(function(err) {
-						if (Notification.permission === 'denied') console.warn('Permission for Notifications was denied');
-						else console.warn('Error during getSubscription()', err);
-					});
-			});
-		}
+		$('section[fid]').fadeOut("fast");
+		$('section[fid=' + index + ']').attr('fid-bind', __routes[index]).fadeIn("slow");
+	};
+
+	$(document).ready(function (e) {
+		var $fhref = $('a[fhref]');
+
+		resolveEvents($fhref);
+		route(__routes[__cri]);
 	});
+
 }) (jQuery);
